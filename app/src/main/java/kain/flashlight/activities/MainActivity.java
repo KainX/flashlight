@@ -8,15 +8,21 @@ import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import kain.flashlight.R;
 import kain.flashlight.utils.Manager;
 
+/**
+ * Flashlight app main activity
+ * @author Kain
+ */
 public class MainActivity extends Activity {
 
-    private Manager manager;
-    private int sdkVersion;
+    private static Manager manager;
+    private static int sdkVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +30,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    /**
+     * Set the flash light on (setFlashOnDeprecated method is still untested)
+     */
+    private void flashOn(){
         manager = new Manager(this);
         sdkVersion = Build.VERSION.SDK_INT;
         if(sdkVersion>Build.VERSION_CODES.LOLLIPOP){
@@ -37,14 +44,22 @@ public class MainActivity extends Activity {
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
+    /**
+     * Set the flash light off (setFlashOffDeprecated method is still untested)
+     */
+    private void flashOff(){
         if(sdkVersion>Build.VERSION_CODES.LOLLIPOP){
             manager.setFlashOff();
         }
         else {
             manager.setFlashOffDeprecated();
         }
+    }
+
+    public void setFlash(View v) {
+        if(((Switch)v).isChecked())
+            flashOn();
+        else
+            flashOff();
     }
 }
