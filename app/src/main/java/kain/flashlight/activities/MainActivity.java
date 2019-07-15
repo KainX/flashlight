@@ -1,5 +1,6 @@
 package kain.flashlight.activities;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -14,7 +15,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Arrays;
 
 import kain.flashlight.R;
 import kain.flashlight.utils.Manager;
@@ -23,13 +27,6 @@ import kain.flashlight.utils.Manager;
  * Flashlight app main activity
  * @author Kain
  */
-class sensor extends TriggerEventListener{
-
-    @Override
-    public void onTrigger(TriggerEvent event) {
-        Log.d("MOTION: ", event.values.toString());
-    }
-}
 
 public class MainActivity extends Activity {
 
@@ -38,13 +35,19 @@ public class MainActivity extends Activity {
 
     private  SensorManager sm;
     private  Sensor sigMotion;
-    private  sensor listener = new sensor();
+    private TextView title;
+    private  TriggerEventListener listener = new TriggerEventListener(){
+        @Override
+        public void onTrigger(TriggerEvent event) {
+            Log.d("APP------>>>",Arrays.toString(event.values));
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        title = findViewById(R.id.title_text);
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         sigMotion = sm.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION);
     }
