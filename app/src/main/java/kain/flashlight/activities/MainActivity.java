@@ -13,6 +13,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import kain.flashlight.R;
+import kain.flashlight.utils.Gyroscope;
 import kain.flashlight.utils.Manager;
 
 /**
@@ -21,13 +22,28 @@ import kain.flashlight.utils.Manager;
  */
 public class MainActivity extends Activity {
 
-    private static Manager manager;
+    private Manager manager;
     private static int sdkVersion;
+    private Gyroscope gyroscope;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        gyroscope = new Gyroscope(this);
+        gyroscope.setListener((x,y,z)->Log.d("APP---->>>>",x+": "+y+": "+z));
+        gyroscope.register();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        gyroscope.unRegister(); //Unregister sensor listener to avoid drain the battery
     }
 
     /**
