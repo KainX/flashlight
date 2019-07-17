@@ -25,6 +25,7 @@ public class MainActivity extends Activity {
     private Manager manager;
     private static int sdkVersion;
     private Gyroscope gyroscope;
+    private boolean isFlashOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,15 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         gyroscope = new Gyroscope(this);
-        gyroscope.setListener((x,y,z)->Log.d("APP---->>>>",x+": "+y+": "+z));
+        gyroscope.setListener((x,y,z)->{
+            Log.d("APP-------->>>: ", String.valueOf(z));
+            if(z > 5){
+                if (isFlashOn)
+                    flashOff();
+                 else
+                    flashOn();
+            }
+        });
         gyroscope.register();
     }
 
@@ -44,6 +53,13 @@ public class MainActivity extends Activity {
     protected void onPause() {
         super.onPause();
         gyroscope.unRegister(); //Unregister sensor listener to avoid drain the battery
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(isFlashOn)
+            flashOff();
     }
 
     /**
@@ -58,6 +74,7 @@ public class MainActivity extends Activity {
         else {
             manager.setFlashOnDeprecated();
         }
+        isFlashOn = true;
     }
 
     /**
@@ -70,6 +87,7 @@ public class MainActivity extends Activity {
         else {
             manager.setFlashOffDeprecated();
         }
+        isFlashOn = false;
     }
 
     public void setFlash(View v) {

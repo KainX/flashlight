@@ -32,6 +32,7 @@ public class Gyroscope {
             @Override
             public void onSensorChanged(SensorEvent event) {
                 if(listener != null){
+                    //Angular speed around the axis
                     listener.onTranslation(event.values[0], event.values[1], event.values[2]);
                 }
             }
